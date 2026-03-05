@@ -399,6 +399,31 @@
             to   { opacity:1; transform:translateY(0) scale(1); }
         }
 
+        /* HASHTAG */
+        .hashtag { color: var(--accent); font-weight: 600; cursor: pointer; transition: opacity .15s; }
+        .hashtag:hover { opacity: .75; text-decoration: underline; }
+
+        /* SEARCH */
+        .search-wrap { padding: 10px 18px 12px; border-bottom: 1px solid var(--border); }
+        .search-input-row {
+            display: flex; align-items: center; gap: 10px;
+            background: #0d0d0d; border: 1px solid var(--border);
+            border-radius: 50px; padding: 9px 16px; transition: border-color .2s;
+        }
+        .search-input-row:focus-within { border-color: var(--accent); }
+        .search-input-row svg { color: var(--text-2); flex-shrink: 0; width: 16px; height: 16px; }
+        .search-input { flex: 1; background: transparent; border: none; outline: none; color: var(--text-1); font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; }
+        .search-input::placeholder { color: var(--text-3); }
+        .search-clear { background: transparent; border: none; color: var(--text-2); cursor: pointer; padding: 0; display: flex; align-items: center; transition: color .15s; }
+        .search-clear:hover { color: var(--accent); }
+        .feed-back-btn { background: transparent; border: none; color: var(--text-2); cursor: pointer; padding: 5px 8px; border-radius: 50%; transition: all .15s; display: flex; align-items: center; margin-right: 8px; }
+        .feed-back-btn:hover { color: var(--accent); background: var(--accent-dim); }
+        .trending-tag { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; }
+        .trending-tag:last-child { border-bottom: none; }
+        .trending-tag:hover { background: rgba(255,153,0,.05); }
+        .trending-tag-name { color: var(--accent); font-weight: 700; font-size: 15px; }
+        .trending-tag-count { color: var(--text-2); font-size: 12px; font-family: 'IBM Plex Mono', monospace; }
+
         /* RESPONSIVE */
         @media (max-width: 1100px) { .right-sidebar { display: none; } .feed-wrap { max-width: 100%; border-right: none; } }
         @media (max-width: 700px) {
@@ -508,7 +533,12 @@
     <!-- FEED -->
     <main class="feed-wrap">
         <div class="feed-header">
-            <h1 class="feed-title">Strona główna</h1>
+            <div style="display:flex;align-items:center;min-width:0;flex:1">
+                <button class="feed-back-btn" x-show="feedMode!=='home'" @click="clearFilter()" title="Wróć">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <h1 class="feed-title" x-text="feedTitle"></h1>
+            </div>
             <button class="refresh-btn" @click="fetchPosts()" title="Odśwież">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                      :class="{'spin': feedLoading}">
@@ -516,6 +546,20 @@
                     <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
                 </svg>
             </button>
+        </div>
+
+        <!-- Search bar -->
+        <div class="search-wrap">
+            <div class="search-input-row">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input class="search-input" type="text" placeholder="Szukaj postów..."
+                       x-model="searchQuery"
+                       @input="onSearch()"
+                       @keydown.escape="clearFilter()">
+                <button class="search-clear" x-show="searchQuery" @click="clearFilter()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
         </div>
 
         <!-- New posts banner -->
@@ -591,7 +635,7 @@
         </div>
 
         <!-- Empty -->
-        <div class="empty-state" x-show="!feedLoading && posts.length===0">
+        <div class="empty-state" x-show="!feedLoading && filteredPosts.length===0">
             <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
@@ -600,7 +644,7 @@
         </div>
 
         <!-- Posts -->
-        <template x-for="post in posts" :key="post.id">
+        <template x-for="post in filteredPosts" :key="post.id">
             <div class="post-card" :id="'p-'+post.id">
                 <div class="avatar avatar-md" x-text="post.author[0].toUpperCase()"></div>
                 <div class="post-body">
@@ -637,7 +681,7 @@
 
                     <!-- Content / Edit -->
                     <div x-show="editingId!==post.id">
-                        <p class="post-text" x-show="post.content" x-text="post.content"></p>
+                        <p class="post-text" x-show="post.content" x-html="renderContent(post.content)"></p>
                         <!-- Post image -->
                         <div class="post-image" x-show="post.image_url" @click="lightboxSrc=post.image_url">
                             <img :src="post.image_url" :alt="'Zdjęcie od '+post.author" loading="lazy">
@@ -740,7 +784,7 @@
             </div>
         </template>
 
-        <div x-show="posts.length>0"
+        <div x-show="filteredPosts.length>0 && !feedLoading"
              style="padding:28px;text-align:center;color:var(--text-3);font-size:12px;letter-spacing:.07em;">
             ── koniec ──
         </div>
@@ -766,6 +810,18 @@
                 <span class="widget-row-label">Realtime</span>
                 <span class="widget-row-value" style="color:#22c55e;font-size:11px;" x-text="realtimeStatus"></span>
             </div>
+        </div>
+        <div class="widget">
+            <div class="widget-title">Trendy</div>
+            <template x-if="trendingHashtags.length===0">
+                <div style="padding:16px 18px;color:var(--text-3);font-size:13px;">Brak hashtagów</div>
+            </template>
+            <template x-for="tag in trendingHashtags" :key="tag.name">
+                <div class="trending-tag" @click="filterByHashtag(tag.name)">
+                    <span class="trending-tag-name" x-text="tag.name"></span>
+                    <span class="trending-tag-count" x-text="tag.count + ' postów'"></span>
+                </div>
+            </template>
         </div>
         <div class="widget">
             <div class="widget-title">O Pacior</div>
@@ -830,6 +886,11 @@ function App() {
         editDraft: '',
         openMenu: null,
 
+        // Search & hashtag
+        searchQuery: '',
+        activeHashtag: null,
+        feedMode: 'home',  // 'home' | 'search' | 'hashtag'
+
         // Images
         imageFile: null,
         imagePreview: null,
@@ -853,6 +914,43 @@ function App() {
         _seq: 0,
 
         get initial() { return (this.currentUser[0] || '?').toUpperCase(); },
+
+        get feedTitle() {
+            if (this.feedMode === 'hashtag') return this.activeHashtag || '';
+            if (this.feedMode === 'search') return 'Wyniki: "' + this.searchQuery + '"';
+            return 'Strona główna';
+        },
+
+        get filteredPosts() {
+            if (this.feedMode === 'hashtag' && this.activeHashtag) {
+                const tag = this.activeHashtag.toLowerCase();
+                return this.posts.filter(p => p.content && p.content.toLowerCase().includes(tag));
+            }
+            if (this.feedMode === 'search' && this.searchQuery.trim()) {
+                const q = this.searchQuery.trim().toLowerCase();
+                return this.posts.filter(p =>
+                    (p.content && p.content.toLowerCase().includes(q)) ||
+                    (p.author && p.author.toLowerCase().includes(q))
+                );
+            }
+            return this.posts;
+        },
+
+        get trendingHashtags() {
+            const counts = {};
+            for (const p of this.posts) {
+                if (!p.content) continue;
+                const tags = p.content.match(/#[\w\u00C0-\u024F]+/g) || [];
+                for (const t of tags) {
+                    const key = t.toLowerCase();
+                    counts[key] = (counts[key] || 0) + 1;
+                }
+            }
+            return Object.entries(counts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3)
+                .map(([name, count]) => ({ name, count }));
+        },
 
         // ── Init ─────────────────────────────────────
         async init() {
@@ -1149,6 +1247,36 @@ function App() {
             }
         },
 
+        // ── Hashtag & search ──────────────────────────
+        filterByHashtag(tag) {
+            this.activeHashtag = tag;
+            this.feedMode = 'hashtag';
+            this.searchQuery = '';
+        },
+
+        onSearch() {
+            if (this.searchQuery.trim()) {
+                this.feedMode = 'search';
+                this.activeHashtag = null;
+            } else {
+                this.feedMode = 'home';
+            }
+        },
+
+        clearFilter() {
+            this.feedMode = 'home';
+            this.activeHashtag = null;
+            this.searchQuery = '';
+        },
+
+        renderContent(text) {
+            if (!text) return '';
+            const escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            return escaped.replace(/#([\w\u00C0-\u024F]+)/g,
+                (m, tag) => `<span class="hashtag" onclick="window.__paciorHashtag('${m}')">${m}</span>`
+            );
+        },
+
         // ── Share ─────────────────────────────────────
         share(post) {
             const url = location.origin + location.pathname + '#p-' + post.id;
@@ -1172,6 +1300,15 @@ function App() {
         },
     }
 }
+
+// Global hashtag click handler
+window.__paciorHashtag = function(tag) {
+    const el = document.querySelector('[x-data]');
+    if (el && el._x_dataStack) {
+        const app = el._x_dataStack[0];
+        if (app && app.filterByHashtag) app.filterByHashtag(tag);
+    }
+};
 </script>
 </body>
 </html>
