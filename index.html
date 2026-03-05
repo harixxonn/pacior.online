@@ -11,6 +11,7 @@
 
     <script src="users.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
 
     <style>
@@ -38,8 +39,7 @@
 
         /* AUTH */
         .auth-screen {
-            min-height: 100vh; display: flex;
-            align-items: center; justify-content: center;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
             position: relative; overflow: hidden;
         }
         .auth-glow {
@@ -58,11 +58,9 @@
             background-size: 56px 56px; opacity: .22;
         }
         .auth-card {
-            position: relative; z-index: 1;
-            background: #030303; border: 1px solid var(--border);
-            border-radius: 22px; padding: 48px 44px;
-            width: 100%; max-width: 420px;
-            animation: slideUp .4s cubic-bezier(.16,1,.3,1) both;
+            position: relative; z-index: 1; background: #030303;
+            border: 1px solid var(--border); border-radius: 22px; padding: 48px 44px;
+            width: 100%; max-width: 420px; animation: slideUp .4s cubic-bezier(.16,1,.3,1) both;
         }
         @keyframes slideUp {
             from { opacity:0; transform:translateY(22px); }
@@ -70,28 +68,20 @@
         }
         .auth-logo { text-align: center; margin-bottom: 36px; }
         .auth-logo img { height: 54px; margin: 0 auto 14px; display: block; }
-        .auth-logo-text {
-            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 36px;
-            color: var(--accent); letter-spacing: -1.5px;
-        }
+        .auth-logo-text { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 36px; color: var(--accent); letter-spacing: -1.5px; }
         .auth-tagline { color: var(--text-2); font-size: 14px; margin-top: 7px; }
-        .form-label {
-            display: block; font-size: 11px; font-weight: 600; color: var(--text-2);
-            text-transform: uppercase; letter-spacing: .07em; margin-bottom: 7px;
-        }
+        .form-label { display: block; font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 7px; }
         .form-input {
-            width: 100%; background: #090909; border: 1px solid var(--border);
-            border-radius: 11px; padding: 13px 16px; color: var(--text-1);
-            font-family: 'IBM Plex Sans', sans-serif; font-size: 15px;
-            outline: none; transition: border-color .2s, box-shadow .2s; margin-bottom: 16px;
+            width: 100%; background: #090909; border: 1px solid var(--border); border-radius: 11px;
+            padding: 13px 16px; color: var(--text-1); font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 15px; outline: none; transition: border-color .2s, box-shadow .2s; margin-bottom: 16px;
         }
         .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,153,0,.09); }
         .form-input::placeholder { color: var(--text-3); }
         .btn-login {
-            width: 100%; background: var(--accent); color: #000;
-            border: none; border-radius: 50px; padding: 14px; margin-top: 6px;
-            font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 700;
-            cursor: pointer; transition: background .2s, box-shadow .2s, transform .1s;
+            width: 100%; background: var(--accent); color: #000; border: none; border-radius: 50px;
+            padding: 14px; margin-top: 6px; font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s, box-shadow .2s, transform .1s;
         }
         .btn-login:hover { background: #e68900; box-shadow: 0 4px 22px rgba(255,153,0,.28); }
         .btn-login:active { transform: scale(.98); }
@@ -114,15 +104,11 @@
         }
         .sidebar-logo { padding: 14px 14px 18px; }
         .sidebar-logo img { height: 34px; display: block; }
-        .sidebar-logo .logo-fallback {
-            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 26px;
-            color: var(--accent); letter-spacing: -.5px; display: none;
-        }
+        .sidebar-logo .logo-fallback { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 26px; color: var(--accent); letter-spacing: -.5px; display: none; }
         .nav-link {
-            display: flex; align-items: center; gap: 18px; padding: 11px 14px;
-            border-radius: 50px; color: var(--text-1); font-size: 19px; font-weight: 400;
-            cursor: pointer; transition: background .15s; text-decoration: none;
-            border: none; background: transparent; width: 100%; text-align: left;
+            display: flex; align-items: center; gap: 18px; padding: 11px 14px; border-radius: 50px;
+            color: var(--text-1); font-size: 19px; font-weight: 400; cursor: pointer;
+            transition: background .15s; text-decoration: none; border: none; background: transparent; width: 100%; text-align: left;
         }
         .nav-link:hover { background: var(--accent-dim); }
         .nav-link.active { font-weight: 700; }
@@ -135,9 +121,8 @@
         }
         .nav-post-btn:hover { background: #e68900; box-shadow: 0 4px 18px rgba(255,153,0,.22); }
         .sidebar-user {
-            margin-top: auto; display: flex; align-items: center; gap: 11px;
-            padding: 11px 12px; border-radius: 50px; cursor: pointer;
-            transition: background .15s; position: relative;
+            margin-top: auto; display: flex; align-items: center; gap: 11px; padding: 11px 12px;
+            border-radius: 50px; cursor: pointer; transition: background .15s; position: relative;
         }
         .sidebar-user:hover { background: rgba(255,255,255,.05); }
         .user-display { font-weight: 700; font-size: 14px; }
@@ -145,10 +130,10 @@
 
         /* AVATAR */
         .avatar {
-            border-radius: 50%; flex-shrink: 0; background: #111;
-            border: 1px solid var(--border); display: flex; align-items: center;
-            justify-content: center; font-family: 'Syne', sans-serif; font-weight: 700;
-            color: var(--accent); text-transform: uppercase; user-select: none;
+            border-radius: 50%; flex-shrink: 0; background: #111; border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent);
+            text-transform: uppercase; user-select: none;
         }
         .avatar-sm { width: 36px; height: 36px; font-size: 14px; }
         .avatar-md { width: 42px; height: 42px; font-size: 17px; }
@@ -157,43 +142,73 @@
         /* FEED */
         .feed-wrap { flex: 1; min-width: 0; max-width: 608px; border-right: 1px solid var(--border); }
         .feed-header {
-            position: sticky; top: 0; z-index: 20;
-            background: rgba(0,0,0,.82); backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border); padding: 15px 20px;
+            position: sticky; top: 0; z-index: 20; background: rgba(0,0,0,.82);
+            backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 15px 20px;
             display: flex; align-items: center; justify-content: space-between;
         }
         .feed-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 20px; }
         .refresh-btn {
-            background: transparent; border: 1px solid var(--border);
-            border-radius: 50%; width: 34px; height: 34px;
-            display: flex; align-items: center; justify-content: center;
+            background: transparent; border: 1px solid var(--border); border-radius: 50%;
+            width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; color: var(--text-2); transition: all .2s;
         }
         .refresh-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
         @keyframes spin { to { transform: rotate(360deg); } }
         .spin { animation: spin .75s linear infinite; }
 
+        /* NEW POST BANNER */
+        .new-posts-banner {
+            background: var(--accent-dim); border-bottom: 1px solid rgba(255,153,0,.2);
+            padding: 12px 20px; text-align: center; cursor: pointer;
+            color: var(--accent); font-size: 14px; font-weight: 600;
+            transition: background .15s;
+        }
+        .new-posts-banner:hover { background: rgba(255,153,0,.18); }
+
         /* COMPOSE */
         .compose-area { display: flex; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--border); }
         .compose-right { flex: 1; min-width: 0; }
         .compose-textarea {
-            width: 100%; background: transparent; border: none; outline: none;
-            color: var(--text-1); font-family: 'IBM Plex Sans', sans-serif;
-            font-size: 20px; resize: none; min-height: 72px; line-height: 1.5; padding-top: 6px;
+            width: 100%; background: transparent; border: none; outline: none; color: var(--text-1);
+            font-family: 'IBM Plex Sans', sans-serif; font-size: 20px; resize: none;
+            min-height: 72px; line-height: 1.5; padding-top: 6px;
         }
         .compose-textarea::placeholder { color: var(--text-3); }
-        .compose-divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+        /* IMAGE PREVIEW IN COMPOSE */
+        .compose-img-preview {
+            position: relative; margin-top: 10px; border-radius: 14px; overflow: hidden;
+            border: 1px solid var(--border); max-height: 280px;
+        }
+        .compose-img-preview img { width: 100%; display: block; object-fit: cover; max-height: 280px; }
+        .compose-img-remove {
+            position: absolute; top: 8px; right: 8px;
+            background: rgba(0,0,0,.75); border: none; border-radius: 50%;
+            width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: white; transition: background .15s;
+        }
+        .compose-img-remove:hover { background: var(--danger); }
+
+        .compose-divider { height: 1px; background: var(--border); margin: 10px 0; }
         .compose-footer { display: flex; align-items: center; justify-content: space-between; }
+        .compose-tools { display: flex; align-items: center; gap: 4px; }
+
+        /* image upload button */
+        .compose-img-btn {
+            background: transparent; border: none; color: var(--accent); cursor: pointer;
+            padding: 7px; border-radius: 50%; transition: background .15s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .compose-img-btn:hover { background: var(--accent-dim); }
+        .compose-img-btn svg { width: 20px; height: 20px; }
+
         .char-ring { position: relative; width: 28px; height: 28px; }
         .char-ring svg { transform: rotate(-90deg); }
-        .char-count-text {
-            position: absolute; inset: 0; display: flex; align-items: center;
-            justify-content: center; font-size: 10px; color: var(--text-2);
-        }
+        .char-count-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--text-2); }
         .post-submit-btn {
             background: var(--accent); color: #000; border: none; border-radius: 50px;
-            padding: 9px 22px; font-family: 'IBM Plex Sans', sans-serif;
-            font-size: 15px; font-weight: 700; cursor: pointer; transition: background .2s, box-shadow .15s;
+            padding: 9px 22px; font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; font-weight: 700;
+            cursor: pointer; transition: background .2s, box-shadow .15s;
         }
         .post-submit-btn:hover { background: #e68900; box-shadow: 0 2px 12px rgba(255,153,0,.28); }
         .post-submit-btn:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
@@ -217,11 +232,37 @@
         .post-time { font-size: 13px; color: var(--text-2); }
         .post-text { font-size: 15px; line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
 
+        /* POST IMAGE */
+        .post-image {
+            margin-top: 12px; border-radius: 14px; overflow: hidden;
+            border: 1px solid var(--border); cursor: pointer;
+        }
+        .post-image img {
+            width: 100%; display: block; object-fit: cover; max-height: 400px;
+            transition: opacity .2s;
+        }
+        .post-image:hover img { opacity: .92; }
+
+        /* LIGHTBOX */
+        .lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 1000;
+            display: flex; align-items: center; justify-content: center; cursor: zoom-out;
+            animation: fadeIn .2s ease both;
+        }
+        .lightbox img { max-width: 92vw; max-height: 92vh; border-radius: 10px; object-fit: contain; }
+        .lightbox-close {
+            position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,.1);
+            border: none; border-radius: 50%; width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: white; transition: background .15s;
+        }
+        .lightbox-close:hover { background: var(--danger); }
+
         /* ACTIONS */
         .actions { display: flex; gap: 2px; margin-top: 13px; }
         .action-btn {
-            display: flex; align-items: center; gap: 5px; padding: 7px 10px;
-            border-radius: 50px; border: none; background: transparent; color: var(--text-2);
+            display: flex; align-items: center; gap: 5px; padding: 7px 10px; border-radius: 50px;
+            border: none; background: transparent; color: var(--text-2);
             font-family: 'IBM Plex Sans', sans-serif; font-size: 13px;
             cursor: pointer; transition: color .15s, background .15s;
         }
@@ -229,6 +270,7 @@
         .action-btn:hover { color: var(--accent); background: var(--accent-dim); }
         .action-btn.liked { color: var(--accent); }
         .action-btn.liked svg { fill: var(--accent); stroke: var(--accent); }
+        .action-btn.commented { color: var(--accent); }
         @keyframes heartPop {
             0% { transform:scale(1); } 40% { transform:scale(1.45); }
             70% { transform:scale(.88); } 100% { transform:scale(1); }
@@ -243,16 +285,14 @@
         }
         .menu-trigger:hover { color: var(--accent); background: var(--accent-dim); }
         .dropdown {
-            position: absolute; right: 0; top: calc(100% + 4px);
-            background: #0e0e0e; border: 1px solid #2a2a2a; border-radius: 14px;
-            overflow: hidden; min-width: 200px; z-index: 100;
-            box-shadow: 0 12px 32px rgba(0,0,0,.6);
+            position: absolute; right: 0; top: calc(100% + 4px); background: #0e0e0e;
+            border: 1px solid #2a2a2a; border-radius: 14px; overflow: hidden; min-width: 200px;
+            z-index: 100; box-shadow: 0 12px 32px rgba(0,0,0,.6);
         }
         .dropdown-item {
-            display: flex; align-items: center; gap: 11px; padding: 14px 16px;
-            cursor: pointer; transition: background .12s; font-size: 15px;
-            border: none; background: transparent; width: 100%; text-align: left;
-            color: var(--text-1); font-family: 'IBM Plex Sans', sans-serif;
+            display: flex; align-items: center; gap: 11px; padding: 14px 16px; cursor: pointer;
+            transition: background .12s; font-size: 15px; border: none; background: transparent;
+            width: 100%; text-align: left; color: var(--text-1); font-family: 'IBM Plex Sans', sans-serif;
         }
         .dropdown-item:hover { background: rgba(255,255,255,.06); }
         .dropdown-item.danger { color: var(--danger); }
@@ -260,26 +300,65 @@
 
         /* EDIT */
         .edit-textarea {
-            width: 100%; background: #0a0a0a; border: 1px solid var(--accent);
-            border-radius: 10px; padding: 12px 14px; color: var(--text-1);
-            font-family: 'IBM Plex Sans', sans-serif; font-size: 15px;
-            resize: vertical; min-height: 80px; outline: none;
+            width: 100%; background: #0a0a0a; border: 1px solid var(--accent); border-radius: 10px;
+            padding: 12px 14px; color: var(--text-1); font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 15px; resize: vertical; min-height: 80px; outline: none;
             box-shadow: 0 0 0 3px rgba(255,153,0,.09);
         }
         .edit-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
         .btn-ghost {
             background: transparent; border: 1px solid var(--border); color: var(--text-1);
-            border-radius: 50px; padding: 7px 18px;
-            font-family: 'IBM Plex Sans', sans-serif; font-size: 14px;
-            cursor: pointer; transition: border-color .15s, background .15s;
+            border-radius: 50px; padding: 7px 18px; font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 14px; cursor: pointer; transition: border-color .15s, background .15s;
         }
         .btn-ghost:hover { border-color: var(--text-2); background: rgba(255,255,255,.04); }
         .btn-save {
             background: var(--accent); border: none; color: #000; border-radius: 50px;
-            padding: 7px 18px; font-family: 'IBM Plex Sans', sans-serif;
-            font-size: 14px; font-weight: 700; cursor: pointer;
+            padding: 7px 18px; font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer;
         }
         .btn-save:hover { background: #e68900; }
+
+        /* COMMENTS SECTION */
+        .comments-section {
+            border-top: 1px solid var(--border); margin-top: 12px; padding-top: 12px;
+        }
+        .comment-item {
+            display: flex; gap: 10px; padding: 8px 0;
+            animation: fadeIn .25s ease both;
+        }
+        .comment-item + .comment-item { border-top: 1px solid #111; }
+        .comment-body { flex: 1; min-width: 0; }
+        .comment-meta { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
+        .comment-author { font-weight: 700; font-size: 13px; }
+        .comment-time { font-size: 12px; color: var(--text-2); font-family: 'IBM Plex Mono', monospace; }
+        .comment-text { font-size: 14px; line-height: 1.55; color: #c5c9cc; white-space: pre-wrap; word-break: break-word; }
+        .comment-del {
+            background: transparent; border: none; color: var(--text-3); cursor: pointer;
+            padding: 2px 5px; border-radius: 4px; font-size: 12px; transition: color .15s;
+            margin-left: auto; flex-shrink: 0; align-self: flex-start;
+        }
+        .comment-del:hover { color: var(--danger); }
+
+        .comment-input-row {
+            display: flex; gap: 10px; align-items: flex-start; margin-top: 12px;
+        }
+        .comment-input {
+            flex: 1; background: #0a0a0a; border: 1px solid var(--border); border-radius: 20px;
+            padding: 9px 16px; color: var(--text-1); font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 14px; outline: none; resize: none; min-height: 38px; line-height: 1.4;
+            transition: border-color .2s;
+        }
+        .comment-input:focus { border-color: var(--accent); }
+        .comment-input::placeholder { color: var(--text-3); }
+        .comment-submit {
+            background: var(--accent); color: #000; border: none; border-radius: 50px;
+            padding: 8px 16px; font-family: 'IBM Plex Sans', sans-serif; font-size: 13px; font-weight: 700;
+            cursor: pointer; transition: background .15s; white-space: nowrap; flex-shrink: 0;
+        }
+        .comment-submit:hover { background: #e68900; }
+        .comment-submit:disabled { opacity: .4; cursor: not-allowed; }
+
+        .comments-loading { text-align: center; padding: 12px; color: var(--text-3); font-size: 13px; }
 
         /* RIGHT SIDEBAR */
         .right-sidebar { width: 350px; flex-shrink: 0; padding: 14px 20px; }
@@ -310,8 +389,8 @@
         }
         .toast {
             background: #111; border: 1px solid var(--border); border-radius: 10px;
-            padding: 11px 20px; font-size: 14px; white-space: nowrap;
-            pointer-events: all; animation: toastIn .3s cubic-bezier(.16,1,.3,1) both;
+            padding: 11px 20px; font-size: 14px; white-space: nowrap; pointer-events: all;
+            animation: toastIn .3s cubic-bezier(.16,1,.3,1) both;
         }
         .toast.success { border-color: var(--accent); color: var(--text-1); }
         .toast.error   { border-color: var(--danger); color: var(--danger); }
@@ -346,31 +425,35 @@
             <div class="auth-logo-text" style="display:none">Pacior</div>
             <p class="auth-tagline">Co jest kurwa, raz, dwa, trzy?!</p>
         </div>
-
         <div class="auth-error" x-show="authError" x-transition>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
             </svg>
             <span x-text="authError"></span>
         </div>
-
         <label class="form-label">Nazwa użytkownika</label>
         <input class="form-input" type="text" placeholder="twój_username"
                x-model="form.username" @keydown.enter="$refs.passInput.focus()">
-
         <label class="form-label">Hasło</label>
         <input class="form-input" type="password" placeholder="••••••••"
                x-model="form.password" x-ref="passInput" @keydown.enter="login()">
-
         <button class="btn-login" @click="login()" :disabled="authLoading">
             <span x-show="!authLoading">Zaloguj się</span>
             <span x-show="authLoading">Logowanie...</span>
         </button>
-
         <p class="auth-footer-note">Konta zarządzane przez administratora.</p>
     </div>
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" x-show="lightboxSrc" @click="lightboxSrc=null" x-transition style="display:none">
+    <button class="lightbox-close" @click.stop="lightboxSrc=null">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+    </button>
+    <img :src="lightboxSrc" @click.stop>
+</div>
 
 <!-- APP -->
 <div class="layout" x-show="loggedIn"
@@ -410,8 +493,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-2)" stroke-width="2">
                 <circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/>
             </svg>
-            <div class="dropdown" x-show="showUserMenu" @click.outside="showUserMenu=false"
-                 style="bottom:64px;top:auto;">
+            <div class="dropdown" x-show="showUserMenu" @click.outside="showUserMenu=false" style="bottom:64px;top:auto;">
                 <button class="dropdown-item danger" @click.stop="logout()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -436,34 +518,67 @@
             </button>
         </div>
 
+        <!-- New posts banner -->
+        <div class="new-posts-banner" x-show="pendingPosts.length > 0" @click="flushPending()" x-transition>
+            ↑ <span x-text="pendingPosts.length"></span> nowe posty — kliknij aby załadować
+        </div>
+
         <!-- Compose -->
         <div class="compose-area">
             <div class="avatar avatar-lg" x-text="initial"></div>
             <div class="compose-right">
-                <textarea class="compose-textarea" placeholder="Co jest kurwa, raz, dwa, trzy?!"
+                <textarea class="compose-textarea" placeholder="Co się dzieje?"
                           x-model="draft" x-ref="compose" maxlength="280"
-                          @input="e=>{e.target.style.height='auto';e.target.style.height=e.target.scrollHeight+'px'}">
+                          @input="e=>{e.target.style.height='auto';e.target.style.height=e.target.scrollHeight+'px'}"
+                          placeholder="Co jest kurwa, raz, dwa, trzy?!">
                 </textarea>
+
+                <!-- Image preview -->
+                <div class="compose-img-preview" x-show="imagePreview" x-transition>
+                    <img :src="imagePreview" alt="podgląd">
+                    <button class="compose-img-remove" @click="removeImage()" title="Usuń zdjęcie">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+
                 <div class="compose-divider"></div>
                 <div class="compose-footer">
-                    <div class="char-ring">
-                        <svg width="28" height="28" viewBox="0 0 28 28">
-                            <circle cx="14" cy="14" r="11" fill="none" stroke="#202020" stroke-width="2.5"/>
-                            <circle cx="14" cy="14" r="11" fill="none"
-                                    :stroke="draft.length>260?(draft.length>=280?'#e5534b':'#ff9900'):'#ff9900'"
-                                    stroke-width="2.5" stroke-linecap="round"
-                                    stroke-dasharray="69.11"
-                                    :stroke-dashoffset="69.11-(69.11*Math.min(draft.length,280)/280)"
-                                    :opacity="draft.length===0?.25:1"
-                                    style="transition:stroke-dashoffset .2s"/>
-                        </svg>
-                        <div class="char-count-text" x-show="draft.length>240" x-text="280-draft.length"></div>
+                    <div class="compose-tools">
+                        <!-- Image button -->
+                        <button class="compose-img-btn" @click="$refs.imgInput.click()" title="Dodaj zdjęcie">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                        </button>
+                        <input type="file" accept="image/*" x-ref="imgInput" style="display:none"
+                               @change="onImagePick($event)">
+
+                        <!-- Char ring -->
+                        <div class="char-ring" style="margin-left:4px">
+                            <svg width="28" height="28" viewBox="0 0 28 28">
+                                <circle cx="14" cy="14" r="11" fill="none" stroke="#202020" stroke-width="2.5"/>
+                                <circle cx="14" cy="14" r="11" fill="none"
+                                        :stroke="draft.length>260?(draft.length>=280?'#e5534b':'#ff9900'):'#ff9900'"
+                                        stroke-width="2.5" stroke-linecap="round"
+                                        stroke-dasharray="69.11"
+                                        :stroke-dashoffset="69.11-(69.11*Math.min(draft.length,280)/280)"
+                                        :opacity="draft.length===0?.25:1"
+                                        style="transition:stroke-dashoffset .2s"/>
+                            </svg>
+                            <div class="char-count-text" x-show="draft.length>240" x-text="280-draft.length"></div>
+                        </div>
                     </div>
+
                     <button class="post-submit-btn" @click="publish()"
-                            :disabled="!draft.trim()||draft.length>280||postLoading">
+                            :disabled="(!draft.trim()&&!imageFile)||draft.length>280||postLoading">
                         <span x-show="!postLoading">Opublikuj</span>
                         <span x-show="postLoading" style="display:flex;align-items:center;gap:6px;">
-                            <span class="spinner" style="width:14px;height:14px;border-width:2px;"></span> Wysyłanie
+                            <span class="spinner" style="width:14px;height:14px;border-width:2px;"></span>
+                            <span x-text="uploadProgress ? 'Wysyłanie '+uploadProgress+'%' : 'Publikuję...'"></span>
                         </span>
                     </button>
                 </div>
@@ -471,8 +586,7 @@
         </div>
 
         <!-- Loading -->
-        <div x-show="feedLoading && posts.length===0"
-             style="display:flex;justify-content:center;padding:56px;">
+        <div x-show="feedLoading && posts.length===0" style="display:flex;justify-content:center;padding:56px;">
             <div class="spinner"></div>
         </div>
 
@@ -490,6 +604,7 @@
             <div class="post-card" :id="'p-'+post.id">
                 <div class="avatar avatar-md" x-text="post.author[0].toUpperCase()"></div>
                 <div class="post-body">
+                    <!-- Meta -->
                     <div class="post-meta-row">
                         <span class="post-author" x-text="post.author"></span>
                         <span class="post-handle" x-text="'@'+post.author"></span>
@@ -520,8 +635,13 @@
                         </div>
                     </div>
 
+                    <!-- Content / Edit -->
                     <div x-show="editingId!==post.id">
-                        <p class="post-text" x-text="post.content"></p>
+                        <p class="post-text" x-show="post.content" x-text="post.content"></p>
+                        <!-- Post image -->
+                        <div class="post-image" x-show="post.image_url" @click="lightboxSrc=post.image_url">
+                            <img :src="post.image_url" :alt="'Zdjęcie od '+post.author" loading="lazy">
+                        </div>
                     </div>
                     <div x-show="editingId===post.id" x-transition style="margin-top:6px">
                         <textarea class="edit-textarea" x-model="editDraft" maxlength="280"
@@ -532,20 +652,25 @@
                         </div>
                     </div>
 
+                    <!-- Actions -->
                     <div class="actions" x-show="editingId!==post.id">
-                        <button class="action-btn" title="Komentarze">
+                        <!-- Comments -->
+                        <button class="action-btn" :class="{commented: openComments===post.id}"
+                                @click="toggleComments(post)">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                             </svg>
-                            <span x-text="post.comments"></span>
+                            <span x-text="commentCounts[post.id] ?? post.comments ?? 0"></span>
                         </button>
+                        <!-- Views -->
                         <button class="action-btn" style="cursor:default" title="Wyświetlenia">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                                 <circle cx="12" cy="12" r="3"/>
                             </svg>
-                            <span x-text="post.views"></span>
+                            <span x-text="post.views||0"></span>
                         </button>
+                        <!-- Share -->
                         <button class="action-btn" @click="share(post)" title="Udostępnij">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                                 <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
@@ -553,6 +678,7 @@
                                 <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
                             </svg>
                         </button>
+                        <!-- Like -->
                         <button class="action-btn" :class="{liked: isLiked(post)}"
                                 :id="'like-'+post.id" @click="like(post)" title="Polub">
                             <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"
@@ -561,6 +687,54 @@
                             </svg>
                             <span x-text="(post.liked_by||[]).length"></span>
                         </button>
+                    </div>
+
+                    <!-- Comments section -->
+                    <div class="comments-section" x-show="openComments===post.id" x-transition>
+                        <!-- Loading -->
+                        <div class="comments-loading" x-show="commentsLoading===post.id">
+                            <div class="spinner" style="width:18px;height:18px;border-width:2px;"></div>
+                        </div>
+
+                        <!-- Comment list -->
+                        <template x-for="c in (commentsByPost[post.id]||[])" :key="c.id">
+                            <div class="comment-item">
+                                <div class="avatar avatar-sm" x-text="c.author[0].toUpperCase()"></div>
+                                <div class="comment-body">
+                                    <div class="comment-meta">
+                                        <span class="comment-author" x-text="c.author"></span>
+                                        <span class="comment-time" x-text="ago(c.created_at)"></span>
+                                        <button class="comment-del" x-show="c.author===currentUser"
+                                                @click="deleteComment(post.id, c.id)" title="Usuń">✕</button>
+                                    </div>
+                                    <p class="comment-text" x-text="c.content"></p>
+                                </div>
+                            </div>
+                        </template>
+
+                        <div x-show="(commentsByPost[post.id]||[]).length===0 && commentsLoading!==post.id"
+                             style="padding:8px 0;color:var(--text-3);font-size:13px;">
+                            Brak komentarzy — bądź pierwszy!
+                        </div>
+
+                        <!-- Comment input -->
+                        <div class="comment-input-row">
+                            <div class="avatar avatar-sm" x-text="initial"></div>
+                            <textarea class="comment-input" placeholder="Napisz komentarz..."
+                                      :x-model="'commentDraft_'+post.id"
+                                      x-ref="'ci_'+post.id"
+                                      @input="e=>{commentDrafts[post.id]=e.target.value}"
+                                      :value="commentDrafts[post.id]||''"
+                                      rows="1"
+                                      @keydown.enter.prevent="submitComment(post.id)"
+                                      @input.once="e=>{e.target.style.height='auto';e.target.style.height=e.target.scrollHeight+'px'}">
+                            </textarea>
+                            <button class="comment-submit"
+                                    @click="submitComment(post.id)"
+                                    :disabled="!(commentDrafts[post.id]||'').trim()">
+                                Wyślij
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -588,6 +762,10 @@
                 <span class="widget-row-label">Aktywni użytkownicy</span>
                 <span class="widget-row-value" x-text="new Set(posts.map(p=>p.author)).size"></span>
             </div>
+            <div class="widget-row">
+                <span class="widget-row-label">Realtime</span>
+                <span class="widget-row-value" style="color:#22c55e;font-size:11px;" x-text="realtimeStatus"></span>
+            </div>
         </div>
         <div class="widget">
             <div class="widget-title">O Pacior</div>
@@ -609,18 +787,19 @@
 </div>
 
 <script>
-// ─── Supabase config ────────────────────────────
 const SB_URL = 'https://cmxgfoljjulsnpzxixek.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNteGdmb2xqanVsc25wenhpeGVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI3NDI2MzksImV4cCI6MjA4ODMxODYzOX0.FGCXQQe442Q6oR3AfQ6gSZQZzMy_HNGX_16sTIW0wXo';
 
-async function sb(method, path, body) {
+const _sb = supabase.createClient(SB_URL, SB_KEY);
+
+async function sbRest(method, path, body) {
     const res = await fetch(SB_URL + '/rest/v1/' + path, {
         method,
         headers: {
             'apikey': SB_KEY,
             'Authorization': 'Bearer ' + SB_KEY,
             'Content-Type': 'application/json',
-            'Prefer': method === 'POST' ? 'return=representation' : 'return=representation',
+            'Prefer': 'return=representation',
         },
         body: body ? JSON.stringify(body) : undefined,
     });
@@ -630,9 +809,9 @@ async function sb(method, path, body) {
     return json;
 }
 
-// ─── App ────────────────────────────────────────
 function App() {
     return {
+        // Auth
         loggedIn: false,
         currentUser: '',
         form: { username: '', password: '' },
@@ -640,26 +819,53 @@ function App() {
         authLoading: false,
         showUserMenu: false,
 
+        // Posts
         posts: [],
+        pendingPosts: [],
         feedLoading: false,
         draft: '',
         postLoading: false,
+        uploadProgress: 0,
         editingId: null,
         editDraft: '',
         openMenu: null,
 
+        // Images
+        imageFile: null,
+        imagePreview: null,
+
+        // Lightbox
+        lightboxSrc: null,
+
+        // Comments
+        openComments: null,
+        commentsByPost: {},
+        commentCounts: {},
+        commentDrafts: {},
+        commentsLoading: null,
+
+        // Realtime
+        realtimeStatus: '●  połączony',
+        _channel: null,
+
+        // Toasts
         toasts: [],
         _seq: 0,
 
         get initial() { return (this.currentUser[0] || '?').toUpperCase(); },
 
-        // ── Init ──────────────────────────────────
+        // ── Init ─────────────────────────────────────
         async init() {
             const s = sessionStorage.getItem('pacior_user');
-            if (s) { this.currentUser = s; this.loggedIn = true; await this.fetchPosts(); }
+            if (s) {
+                this.currentUser = s;
+                this.loggedIn = true;
+                await this.fetchPosts();
+                this.subscribeRealtime();
+            }
         },
 
-        // ── Auth ──────────────────────────────────
+        // ── Auth ─────────────────────────────────────
         login() {
             this.authError = '';
             const { username, password } = this.form;
@@ -674,6 +880,7 @@ function App() {
                     this.form = { username: '', password: '' };
                     this.toast('Witaj, @' + match.username + '!', 'success');
                     await this.fetchPosts();
+                    this.subscribeRealtime();
                 } else {
                     this.authError = 'Nieprawidłowy login lub hasło.';
                 }
@@ -682,56 +889,151 @@ function App() {
         },
 
         logout() {
+            if (this._channel) _sb.removeChannel(this._channel);
             this.loggedIn = false;
             this.currentUser = '';
             this.posts = [];
+            this.pendingPosts = [];
             this.showUserMenu = false;
             sessionStorage.removeItem('pacior_user');
             this.toast('Wylogowano.', 'success');
         },
 
-        // ── Fetch posts ───────────────────────────
+        // ── Fetch posts ───────────────────────────────
         async fetchPosts() {
             this.feedLoading = true;
             try {
-                const data = await sb('GET', 'posts?order=created_at.desc&limit=200');
+                const data = await sbRest('GET', 'posts?order=created_at.desc&limit=200');
                 this.posts = data || [];
-            } catch (e) {
+            } catch {
                 this.toast('Błąd ładowania postów.', 'error');
             } finally {
                 this.feedLoading = false;
             }
         },
 
-        // ── Publish ───────────────────────────────
+        // ── Realtime ──────────────────────────────────
+        subscribeRealtime() {
+            if (this._channel) _sb.removeChannel(this._channel);
+            this._channel = _sb
+                .channel('public-feed')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'posts' }, (payload) => {
+                    const newPost = payload.new;
+                    // jeśli to mój własny post - już go mamy
+                    if (newPost.author === this.currentUser) return;
+                    const exists = this.posts.find(p => p.id === newPost.id);
+                    if (!exists) this.pendingPosts.unshift(newPost);
+                })
+                .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'posts' }, (payload) => {
+                    this.posts = this.posts.filter(p => p.id !== payload.old.id);
+                })
+                .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'posts' }, (payload) => {
+                    const idx = this.posts.findIndex(p => p.id === payload.new.id);
+                    if (idx !== -1) this.posts.splice(idx, 1, { ...this.posts[idx], ...payload.new });
+                })
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'comments' }, (payload) => {
+                    const c = payload.new;
+                    if (!this.commentsByPost[c.post_id]) return;
+                    const exists = this.commentsByPost[c.post_id].find(x => x.id === c.id);
+                    if (!exists && c.author !== this.currentUser) {
+                        this.commentsByPost[c.post_id].push(c);
+                        this.commentCounts[c.post_id] = (this.commentCounts[c.post_id] || 0) + 1;
+                    }
+                })
+                .subscribe((status) => {
+                    this.realtimeStatus = status === 'SUBSCRIBED' ? '●  połączony' : '○  łączenie...';
+                });
+        },
+
+        flushPending() {
+            this.posts.unshift(...this.pendingPosts);
+            this.pendingPosts = [];
+        },
+
+        // ── Image handling ────────────────────────────
+        onImagePick(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) { this.toast('Maks. 5MB.', 'error'); return; }
+            this.imageFile = file;
+            const reader = new FileReader();
+            reader.onload = ev => { this.imagePreview = ev.target.result; };
+            reader.readAsDataURL(file);
+        },
+
+        removeImage() {
+            this.imageFile = null;
+            this.imagePreview = null;
+            if (this.$refs.imgInput) this.$refs.imgInput.value = '';
+        },
+
+        async uploadImage(file) {
+            const ext = file.name.split('.').pop();
+            const name = Date.now() + '_' + Math.random().toString(36).slice(2) + '.' + ext;
+            const res = await fetch(`${SB_URL}/storage/v1/object/images/${name}`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SB_KEY,
+                    'Authorization': 'Bearer ' + SB_KEY,
+                    'Content-Type': file.type,
+                    'x-upsert': 'true',
+                },
+                body: file,
+            });
+            if (!res.ok) throw new Error('Upload failed');
+            return `${SB_URL}/storage/v1/object/public/images/${name}`;
+        },
+
+        // ── Publish ───────────────────────────────────
         async publish() {
-            if (!this.draft.trim() || this.postLoading) return;
+            if ((!this.draft.trim() && !this.imageFile) || this.postLoading) return;
             this.postLoading = true;
+            this.uploadProgress = 0;
             try {
-                const res = await sb('POST', 'posts', {
-                    author:   this.currentUser,
-                    content:  this.draft.trim(),
-                    liked_by: [],
-                    views:    0,
-                    comments: 0,
+                let imageUrl = null;
+                if (this.imageFile) {
+                    this.uploadProgress = 30;
+                    imageUrl = await this.uploadImage(this.imageFile);
+                    this.uploadProgress = 80;
+                }
+                const res = await sbRest('POST', 'posts', {
+                    author:    this.currentUser,
+                    content:   this.draft.trim(),
+                    image_url: imageUrl,
+                    liked_by:  [],
+                    views:     0,
+                    comments:  0,
                 });
                 const newPost = Array.isArray(res) ? res[0] : res;
                 this.posts.unshift(newPost);
                 this.draft = '';
+                this.removeImage();
                 this.$nextTick(() => { if (this.$refs.compose) this.$refs.compose.style.height = 'auto'; });
                 this.toast('Post opublikowany!', 'success');
             } catch (e) {
-                this.toast('Błąd publikacji.', 'error');
+                this.toast('Błąd publikacji: ' + e.message, 'error');
             } finally {
                 this.postLoading = false;
+                this.uploadProgress = 0;
             }
         },
 
-        // ── Delete ────────────────────────────────
+        // ── Delete post ───────────────────────────────
         async remove(id) {
             if (!confirm('Usunąć ten post?')) return;
             try {
-                await sb('DELETE', 'posts?id=eq.' + id);
+                // delete image from storage if exists
+                const post = this.posts.find(p => p.id === id);
+                if (post?.image_url) {
+                    const filename = post.image_url.split('/images/')[1];
+                    if (filename) {
+                        await fetch(`${SB_URL}/storage/v1/object/images/${filename}`, {
+                            method: 'DELETE',
+                            headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY },
+                        });
+                    }
+                }
+                await sbRest('DELETE', 'posts?id=eq.' + id);
                 this.posts = this.posts.filter(p => p.id !== id);
                 this.toast('Post usunięty.', 'success');
             } catch {
@@ -739,13 +1041,13 @@ function App() {
             }
         },
 
-        // ── Edit ──────────────────────────────────
+        // ── Edit ──────────────────────────────────────
         startEdit(post) { this.editingId = post.id; this.editDraft = post.content; },
 
         async saveEdit(id) {
             if (!this.editDraft.trim()) return;
             try {
-                await sb('PATCH', 'posts?id=eq.' + id, { content: this.editDraft.trim() });
+                await sbRest('PATCH', 'posts?id=eq.' + id, { content: this.editDraft.trim() });
                 const idx = this.posts.findIndex(p => p.id === id);
                 if (idx !== -1) this.posts.splice(idx, 1, { ...this.posts[idx], content: this.editDraft.trim() });
                 this.editingId = null;
@@ -755,7 +1057,7 @@ function App() {
             }
         },
 
-        // ── Like ──────────────────────────────────
+        // ── Like ──────────────────────────────────────
         isLiked(post) { return (post.liked_by || []).includes(this.currentUser); },
 
         async like(post) {
@@ -766,31 +1068,94 @@ function App() {
             const newLikedBy = already
                 ? p.liked_by.filter(u => u !== this.currentUser)
                 : [...(p.liked_by || []), this.currentUser];
-
-            // Optimistic update
             this.posts.splice(idx, 1, { ...p, liked_by: newLikedBy });
-
             if (!already) {
                 const el = document.getElementById('like-' + post.id);
                 if (el) { el.classList.remove('heart-pop'); void el.offsetWidth; el.classList.add('heart-pop'); }
             }
-
             try {
-                await sb('PATCH', 'posts?id=eq.' + post.id, { liked_by: newLikedBy });
+                await sbRest('PATCH', 'posts?id=eq.' + post.id, { liked_by: newLikedBy });
             } catch {
-                // Revert
                 this.posts.splice(idx, 1, p);
                 this.toast('Błąd polubienia.', 'error');
             }
         },
 
-        // ── Share ─────────────────────────────────
+        // ── Comments ──────────────────────────────────
+        async toggleComments(post) {
+            if (this.openComments === post.id) {
+                this.openComments = null;
+                return;
+            }
+            this.openComments = post.id;
+            if (!this.commentsByPost[post.id]) {
+                await this.fetchComments(post.id);
+            }
+        },
+
+        async fetchComments(postId) {
+            this.commentsLoading = postId;
+            try {
+                const data = await sbRest('GET', `comments?post_id=eq.${postId}&order=created_at.asc`);
+                this.commentsByPost = { ...this.commentsByPost, [postId]: data || [] };
+                this.commentCounts = { ...this.commentCounts, [postId]: (data || []).length };
+            } catch {
+                this.toast('Błąd ładowania komentarzy.', 'error');
+            } finally {
+                this.commentsLoading = null;
+            }
+        },
+
+        async submitComment(postId) {
+            const content = (this.commentDrafts[postId] || '').trim();
+            if (!content) return;
+            try {
+                const res = await sbRest('POST', 'comments', {
+                    post_id: postId,
+                    author:  this.currentUser,
+                    content,
+                });
+                const newComment = Array.isArray(res) ? res[0] : res;
+                if (!this.commentsByPost[postId]) this.commentsByPost[postId] = [];
+                this.commentsByPost[postId].push(newComment);
+                this.commentCounts = { ...this.commentCounts, [postId]: (this.commentsByPost[postId] || []).length };
+                this.commentDrafts = { ...this.commentDrafts, [postId]: '' };
+
+                // update comment count on post
+                const idx = this.posts.findIndex(p => p.id === postId);
+                if (idx !== -1) {
+                    const count = (this.commentsByPost[postId] || []).length;
+                    this.posts.splice(idx, 1, { ...this.posts[idx], comments: count });
+                    await sbRest('PATCH', 'posts?id=eq.' + postId, { comments: count }).catch(() => {});
+                }
+            } catch {
+                this.toast('Błąd wysyłania komentarza.', 'error');
+            }
+        },
+
+        async deleteComment(postId, commentId) {
+            try {
+                await sbRest('DELETE', 'comments?id=eq.' + commentId);
+                this.commentsByPost[postId] = (this.commentsByPost[postId] || []).filter(c => c.id !== commentId);
+                this.commentCounts = { ...this.commentCounts, [postId]: (this.commentsByPost[postId] || []).length };
+                const idx = this.posts.findIndex(p => p.id === postId);
+                if (idx !== -1) {
+                    const count = (this.commentsByPost[postId] || []).length;
+                    this.posts.splice(idx, 1, { ...this.posts[idx], comments: count });
+                    await sbRest('PATCH', 'posts?id=eq.' + postId, { comments: count }).catch(() => {});
+                }
+            } catch {
+                this.toast('Błąd usuwania komentarza.', 'error');
+            }
+        },
+
+        // ── Share ─────────────────────────────────────
         share(post) {
             const url = location.origin + location.pathname + '#p-' + post.id;
             navigator.clipboard?.writeText(url).then(() => this.toast('Link skopiowany!', 'success'));
         },
 
-        // ── Helpers ───────────────────────────────
+        // ── Helpers ───────────────────────────────────
         ago(ts) {
             const s = Math.floor((Date.now() - new Date(ts)) / 1000);
             if (s < 60) return s + 's';
@@ -803,7 +1168,7 @@ function App() {
         toast(msg, type = 'success') {
             const id = ++this._seq;
             this.toasts.push({ id, msg, type });
-            setTimeout(() => { this.toasts = this.toasts.filter(t => t.id !== id); }, 3000);
+            setTimeout(() => { this.toasts = this.toasts.filter(t => t.id !== id); }, 3500);
         },
     }
 }
