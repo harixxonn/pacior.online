@@ -1,9 +1,0 @@
-// ============================================
-//  LISTA UŻYTKOWNIKÓW — edytuj tutaj
-//  Dodaj nowy wpis: { username: "...", password: "..." }
-// ============================================
-
-const USERS = [
-    { username: "hrxn444",   password: "admin123"    },
-    { username: "marek",   password: "cwel"  },
-];
