@@ -6,4 +6,5 @@
 const USERS = [
     { username: "hrxn444",   password: "admin123"    },
     { username: "skute_korko",   password: "jabuszko67"  },
+    { username: "szepcze",   password: "krzycze"  }
 ];
