@@ -1087,10 +1087,13 @@ function App() {
                 if (match) {
                     this.currentUser = match.username;
                     this.loggedIn = true;
+                    this.loadBadges();
                     sessionStorage.setItem('pacior_user', match.username);
                     this.form = { username: '', password: '' };
                     this.toast('Witaj, @' + match.username + '!', 'success');
                     await this.fetchPosts();
+                    await this.fetchAvatars();
+                    this.currentAvatar = this.avatarMap[this.currentUser] || null;
                     this.subscribeRealtime();
                 } else {
                     this.authError = 'Nieprawidłowy login lub hasło.';
