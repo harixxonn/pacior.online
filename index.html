@@ -402,6 +402,31 @@
         /* BADGES */
         .badge { display: inline-flex; align-items: center; margin-left: 3px; vertical-align: middle; line-height: 1; }
         .badge-elite { color: #ff9900; font-size: 14px; }
+        .badge-elite-img { width: 18px; height: 18px; object-fit: contain; margin-left: 3px; vertical-align: middle; display: inline-block; }
+
+        /* COMING SOON MODAL */
+        .coming-soon-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,.8);
+            z-index: 600; display: flex; align-items: center; justify-content: center;
+            animation: fadeIn .2s ease both;
+        }
+        .coming-soon-modal {
+            background: #0a0a0a; border: 1px solid var(--border); border-radius: 24px;
+            padding: 40px 36px; width: 100%; max-width: 380px; text-align: center;
+            animation: slideUp .3s cubic-bezier(.16,1,.3,1) both;
+        }
+        .coming-soon-logo { width: 64px; height: 64px; margin: 0 auto 20px; }
+        .coming-soon-title {
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 26px;
+            color: var(--accent); letter-spacing: -.5px; margin-bottom: 10px;
+        }
+        .coming-soon-sub { color: var(--text-2); font-size: 15px; line-height: 1.6; margin-bottom: 28px; }
+        .coming-soon-close {
+            background: var(--accent); color: #000; border: none; border-radius: 50px;
+            padding: 12px 32px; font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s;
+        }
+        .coming-soon-close:hover { background: #e68900; }
         .badge-bot    { color: #71767b; font-size: 13px; font-family: 'IBM Plex Mono', monospace; font-weight: 700; background: #151515; border: 1px solid #2a2a2a; border-radius: 4px; padding: 0px 4px; font-size: 11px; }
 
         /* MENTION */
@@ -556,6 +581,10 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span class="nav-link-label">Profil</span>
             </a>
+            <a href="#" class="nav-link" @click.prevent="showEliteModal=true">
+                <img src="pacior_elite.png" style="width:24px;height:24px;object-fit:contain;flex-shrink:0;" onerror="this.style.opacity='.3'">
+                <span class="nav-link-label">Pacior Elite</span>
+            </a>
             <button class="nav-post-btn" @click="$nextTick(()=>$refs.compose.focus())">
                 <span class="nav-post-btn-label">Napisz post</span>
             </button>
@@ -568,7 +597,7 @@
             <div class="user-names">
                 <div class="user-display" style="display:flex;align-items:center;gap:4px;">
                     <span x-text="currentUser"></span>
-                    <span x-show="currentUserVerified==='elite'" class="badge badge-elite" title="Pacior Elite">★</span>
+                    <img x-show="currentUserVerified==='elite'" src="pacior_elite.png" class="badge-elite-img" title="Pacior Elite">
                     <span x-show="currentUserVerified==='bot'" class="badge badge-bot" title="Bot">BOT</span>
                 </div>
                 <div class="user-handle" x-text="'@'+currentUser"></div>
@@ -721,7 +750,7 @@
                     <!-- Meta -->
                     <div class="post-meta-row">
                         <span class="post-author" x-text="post.author"></span>
-                        <span x-show="getVerified(post.author)==='elite'" class="badge badge-elite" title="Pacior Elite">★</span>
+                        <img x-show="getVerified(post.author)==='elite'" src="pacior_elite.png" class="badge-elite-img" title="Pacior Elite">
                         <span x-show="getVerified(post.author)==='bot'" class="badge badge-bot" title="Bot">BOT</span>
                         <span class="post-handle" x-text="'@'+post.author"></span>
                         <span class="post-dot">·</span>
@@ -907,6 +936,16 @@
     </aside>
 </div>
 
+<!-- COMING SOON MODAL -->
+<div class="coming-soon-overlay" x-show="showEliteModal" @click.self="showEliteModal=false" x-transition style="display:none">
+    <div class="coming-soon-modal">
+        <img src="pacior_elite.png" class="coming-soon-logo" onerror="this.style.display='none'">
+        <div class="coming-soon-title">Pacior Elite</div>
+        <p class="coming-soon-sub">Coś wielkiego nadchodzi.<br>Bądź pierwszy, który się dowie.</p>
+        <button class="coming-soon-close" @click="showEliteModal=false">Rozumiem</button>
+    </div>
+</div>
+
 <!-- AVATAR MODAL -->
 <div class="avatar-modal-overlay" x-show="showAvatarModal" @click.self="showAvatarModal=false" x-transition style="display:none">
     <div class="avatar-modal">
@@ -975,6 +1014,7 @@ function App() {
         authError: '',
         authLoading: false,
         showUserMenu: false,
+        showEliteModal: false,
 
         // Posts
         posts: [],
