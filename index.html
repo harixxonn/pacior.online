@@ -410,49 +410,72 @@
         .profile-wrap { flex: 1; min-width: 0; max-width: 608px; border-right: 1px solid var(--border); }
         .profile-header {
             position: sticky; top: 0; z-index: 20; background: rgba(0,0,0,.82);
-            backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 15px 20px;
+            backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 13px 16px;
             display: flex; align-items: center; gap: 14px;
         }
         .profile-header-back {
             background: transparent; border: none; color: var(--text-2); cursor: pointer;
-            padding: 5px 8px; border-radius: 50%; transition: all .15s; display: flex; align-items: center;
+            padding: 7px; border-radius: 50%; transition: all .15s; display: flex; align-items: center;
+            flex-shrink: 0;
         }
         .profile-header-back:hover { color: var(--accent); background: var(--accent-dim); }
-        .profile-header-info h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; line-height: 1.2; }
+        .profile-header-info h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 19px; line-height: 1.2; }
         .profile-header-info span { font-size: 13px; color: var(--text-2); }
 
         .profile-banner {
-            height: 120px; background: linear-gradient(135deg, #0f0f0f 0%, #1a1000 50%, #0f0f0f 100%);
-            border-bottom: 1px solid var(--border); position: relative;
+            height: 200px;
+            background: linear-gradient(135deg, #0f0800 0%, #2a1800 40%, #1a0f00 70%, #0a0a0a 100%);
+            position: relative; overflow: hidden;
+        }
+        .profile-banner::after {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 30% 60%, rgba(255,153,0,.08) 0%, transparent 60%);
         }
         .profile-avatar-wrap {
-            position: absolute; bottom: -36px; left: 20px;
+            position: absolute; bottom: -50px; left: 20px; z-index: 2;
         }
-        .profile-avatar-wrap .avatar { width: 72px; height: 72px; font-size: 28px; border: 3px solid #000; }
-        .profile-info-section { padding: 48px 20px 18px; border-bottom: 1px solid var(--border); }
-        .profile-name-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
-        .profile-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; }
-        .profile-handle { color: var(--text-2); font-size: 14px; font-family: 'IBM Plex Mono', monospace; margin-bottom: 12px; }
+        .profile-avatar-wrap .avatar {
+            width: 108px; height: 108px; font-size: 42px;
+            border: 4px solid #000; box-shadow: 0 0 0 1px var(--border);
+        }
+        .profile-edit-btn-wrap {
+            position: absolute; bottom: -48px; right: 16px; z-index: 2;
+        }
+        .profile-edit-profile-btn {
+            background: transparent; border: 1px solid var(--border); color: var(--text-1);
+            border-radius: 50px; padding: 8px 18px; font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 14px; font-weight: 700; cursor: pointer; transition: border-color .15s, background .15s;
+            white-space: nowrap;
+        }
+        .profile-edit-profile-btn:hover { border-color: var(--text-2); background: rgba(255,255,255,.05); }
+
+        .profile-info-section { padding: 62px 20px 18px; border-bottom: 1px solid var(--border); }
+        .profile-name-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+        .profile-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 24px; }
+        .profile-handle { color: var(--text-2); font-size: 15px; font-family: 'IBM Plex Mono', monospace; margin-bottom: 14px; }
         .profile-bio {
-            font-size: 15px; line-height: 1.6; color: var(--text-1); margin-bottom: 14px;
+            font-size: 16px; line-height: 1.65; color: var(--text-1); margin-bottom: 16px;
             white-space: pre-wrap; word-break: break-word;
         }
-        .profile-bio-placeholder { color: var(--text-3); font-size: 14px; font-style: italic; margin-bottom: 14px; }
-        .profile-stats { display: flex; gap: 22px; }
-        .profile-stat-val { font-weight: 700; font-size: 16px; }
-        .profile-stat-label { font-size: 13px; color: var(--text-2); margin-left: 4px; }
+        .profile-bio-placeholder { color: var(--text-3); font-size: 15px; font-style: italic; margin-bottom: 16px; cursor: pointer; }
+        .profile-bio-placeholder:hover { color: var(--text-2); }
+        .profile-stats { display: flex; gap: 24px; margin-top: 4px; }
+        .profile-stat { display: flex; align-items: baseline; gap: 5px; }
+        .profile-stat-val { font-weight: 800; font-size: 18px; color: var(--text-1); }
+        .profile-stat-label { font-size: 14px; color: var(--text-2); }
 
         .profile-edit-bio {
             width: 100%; background: #0a0a0a; border: 1px solid var(--accent); border-radius: 10px;
             padding: 10px 14px; color: var(--text-1); font-family: 'IBM Plex Sans', sans-serif;
-            font-size: 15px; resize: none; min-height: 70px; outline: none;
+            font-size: 15px; resize: none; min-height: 80px; outline: none;
             box-shadow: 0 0 0 3px rgba(255,153,0,.09); margin-bottom: 10px;
         }
         .profile-edit-actions { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 14px; }
 
         .profile-posts-title {
-            padding: 14px 20px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px;
-            border-bottom: 1px solid var(--border); color: var(--text-2);
+            padding: 16px 20px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+            border-bottom: 1px solid var(--border); color: var(--text-2); letter-spacing: .03em;
+            text-transform: uppercase;
         }
 
         /* POLL */
@@ -1014,7 +1037,10 @@
                         <!-- Comment list -->
                         <template x-for="c in (commentsByPost[post.id]||[])" :key="c.id">
                             <div class="comment-item">
-                                <div class="avatar avatar-sm" x-text="c.author[0].toUpperCase()"></div>
+                                <div class="avatar avatar-sm">
+                                    <img x-show="avatarMap[c.author]" :src="avatarMap[c.author]" alt="avatar">
+                                    <span x-show="!avatarMap[c.author]" x-text="c.author[0].toUpperCase()"></span>
+                                </div>
                                 <div class="comment-body">
                                     <div class="comment-meta">
                                         <span class="comment-author" x-text="c.author"></span>
@@ -1034,7 +1060,10 @@
 
                         <!-- Comment input -->
                         <div class="comment-input-row">
-                            <div class="avatar avatar-sm" x-text="initial"></div>
+                            <div class="avatar avatar-sm">
+                            <img x-show="currentAvatar" :src="currentAvatar" alt="avatar">
+                            <span x-show="!currentAvatar" x-text="initial"></span>
+                        </div>
                             <textarea class="comment-input" placeholder="Napisz komentarz..."
                                       :x-model="'commentDraft_'+post.id"
                                       x-ref="'ci_'+post.id"
@@ -1075,12 +1104,20 @@
         </div>
 
         <!-- Banner + avatar -->
-        <div class="profile-banner">
+        <div class="profile-banner" style="position:relative;">
             <div class="profile-avatar-wrap">
-                <div class="avatar" style="width:72px;height:72px;font-size:28px;border:3px solid #000;">
+                <div class="avatar" style="width:108px;height:108px;font-size:42px;border:4px solid #000;">
                     <img x-show="avatarMap[profileUser]" :src="avatarMap[profileUser]" alt="avatar">
                     <span x-show="!avatarMap[profileUser]" x-text="(profileUser[0]||'?').toUpperCase()"></span>
                 </div>
+            </div>
+            <!-- Edit profile / Change avatar button -->
+            <div class="profile-edit-btn-wrap">
+                <button class="profile-edit-profile-btn"
+                        x-show="profileUser===currentUser"
+                        @click="showAvatarModal=true">
+                    Edytuj profilowe
+                </button>
             </div>
         </div>
 
@@ -1122,15 +1159,15 @@
 
             <!-- Stats -->
             <div class="profile-stats">
-                <div>
+                <div class="profile-stat">
                     <span class="profile-stat-val" x-text="profilePosts.length"></span>
                     <span class="profile-stat-label">postów</span>
                 </div>
-                <div>
+                <div class="profile-stat">
                     <span class="profile-stat-val" x-text="profileTotalLikes"></span>
                     <span class="profile-stat-label">polubień</span>
                 </div>
-                <div>
+                <div class="profile-stat">
                     <span class="profile-stat-val" x-text="profileTotalComments"></span>
                     <span class="profile-stat-label">komentarzy</span>
                 </div>
