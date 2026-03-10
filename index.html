@@ -1073,17 +1073,18 @@
                     <div x-show="editingId!==post.id">
                         <p class="post-text" x-show="post.content" x-html="renderContent(post.content)"></p>
                         <!-- Post images -->
-                        <template x-if="(post.images && post.images.length > 0) || post.image_url">
+                        <template x-if="postImageList(post).length === 1">
+                            <div class="post-image" @click="lightboxSrc=postImageList(post)[0]">
+                                <img :src="postImageList(post)[0]" :alt="'Zdjęcie od '+post.author" loading="lazy">
+                            </div>
+                        </template>
+                        <template x-if="postImageList(post).length > 1">
                             <div class="post-img-grid" :class="'count-' + postImageList(post).length">
                                 <template x-for="(url, i) in postImageList(post)" :key="i">
                                     <div class="post-img-cell"
                                          :class="postImageList(post).length===3 && i===0 ? 'span-col' : ''"
                                          @click="openLightbox(post, i)">
                                         <img :src="url" loading="lazy" alt="zdjęcie">
-                                        <div class="post-img-more"
-                                             x-show="i===3 && postImageList(post).length > 4">
-                                            +<span x-text="postImageList(post).length - 4"></span>
-                                        </div>
                                     </div>
                                 </template>
                             </div>
@@ -1342,7 +1343,12 @@
                         <span class="post-time" x-text="ago(post.created_at)"></span>
                     </div>
                     <p class="post-text" x-show="post.content" x-html="renderContent(post.content)"></p>
-                    <template x-if="(post.images && post.images.length > 0) || post.image_url">
+                    <template x-if="postImageList(post).length === 1">
+                        <div class="post-image" @click="lightboxSrc=postImageList(post)[0]">
+                            <img :src="postImageList(post)[0]" loading="lazy" alt="zdjęcie">
+                        </div>
+                    </template>
+                    <template x-if="postImageList(post).length > 1">
                         <div class="post-img-grid" :class="'count-' + postImageList(post).length">
                             <template x-for="(url, i) in postImageList(post)" :key="i">
                                 <div class="post-img-cell"
