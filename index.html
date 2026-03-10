@@ -795,7 +795,7 @@
                 <span x-show="!currentAvatar" x-text="initial"></span>
             </div>
             <div class="compose-right">
-                <textarea class="compose-textarea" placeholder="Co się dzieje?"
+                <textarea class="compose-textarea" placeholder="Co jest kurwa, raz, dwa, trzy?!"
                           x-model="draft" x-ref="compose" maxlength="280"
                           @input="e=>{e.target.style.height='auto';e.target.style.height=e.target.scrollHeight+'px'}"
                           placeholder="Co jest kurwa, raz, dwa, trzy?!">
@@ -1135,7 +1135,7 @@
             <!-- Bio display / edit -->
             <template x-if="profileUser===currentUser && editingBio">
                 <div>
-                    <textarea class="profile-edit-bio" x-model="bioDraft" maxlength="160" placeholder="Napisz coś o sobie..." rows="3"></textarea>
+                    <textarea class="profile-edit-bio" x-model="bioDraft" maxlength="250" placeholder="Napisz coś o sobie..." rows="3"></textarea>
                     <div class="profile-edit-actions">
                         <button class="btn-ghost" @click="editingBio=false">Anuluj</button>
                         <button class="btn-save" @click="saveBio()">Zapisz</button>
