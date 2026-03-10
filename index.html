@@ -404,6 +404,61 @@
         .badge-elite { color: #ff9900; font-size: 14px; }
         .badge-elite-img { width: 18px; height: 18px; object-fit: contain; margin-left: 3px; vertical-align: middle; display: inline-block; }
 
+
+        /* POLL */
+        .poll-compose {
+            margin-top: 10px; background: #080808; border: 1px solid var(--border);
+            border-radius: 14px; padding: 14px 16px;
+        }
+        .poll-compose-label { font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px; }
+        .poll-option-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .poll-option-input {
+            flex: 1; background: #0e0e0e; border: 1px solid var(--border); border-radius: 8px;
+            padding: 8px 12px; color: var(--text-1); font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 14px; outline: none; transition: border-color .2s;
+        }
+        .poll-option-input:focus { border-color: var(--accent); }
+        .poll-option-input::placeholder { color: var(--text-3); }
+        .poll-option-remove {
+            background: transparent; border: none; color: var(--text-3); cursor: pointer;
+            padding: 4px; border-radius: 4px; transition: color .15s; display: flex; align-items: center;
+        }
+        .poll-option-remove:hover { color: var(--danger); }
+        .poll-add-option {
+            background: transparent; border: 1px dashed var(--border); border-radius: 8px;
+            padding: 7px 14px; color: var(--text-2); font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 13px; cursor: pointer; transition: border-color .15s, color .15s; width: 100%;
+            margin-top: 2px;
+        }
+        .poll-add-option:hover { border-color: var(--accent); color: var(--accent); }
+        .poll-duration { font-size: 12px; color: var(--text-3); margin-top: 10px; text-align: right; }
+
+        /* POLL IN POST */
+        .poll-wrap { margin-top: 12px; }
+        .poll-option-btn {
+            width: 100%; position: relative; margin-bottom: 8px; border-radius: 10px;
+            overflow: hidden; border: 1px solid var(--border); cursor: pointer;
+            background: #080808; transition: border-color .15s;
+            display: flex; align-items: center; padding: 0;
+            font-family: 'IBM Plex Sans', sans-serif;
+        }
+        .poll-option-btn:hover:not(:disabled) { border-color: var(--accent); }
+        .poll-option-btn:disabled { cursor: default; }
+        .poll-option-bar {
+            position: absolute; left: 0; top: 0; bottom: 0;
+            background: rgba(255,153,0,.12); transition: width .5s ease; border-radius: 9px;
+        }
+        .poll-option-bar.winner { background: rgba(255,153,0,.22); }
+        .poll-option-content {
+            position: relative; z-index: 1; display: flex; align-items: center;
+            justify-content: space-between; width: 100%; padding: 11px 14px;
+        }
+        .poll-option-text { font-size: 14px; font-weight: 500; }
+        .poll-option-pct { font-size: 13px; font-weight: 700; color: var(--accent); font-family: 'IBM Plex Mono', monospace; }
+        .poll-option-mycheck { color: var(--accent); font-size: 13px; margin-left: 5px; }
+        .poll-meta { font-size: 12px; color: var(--text-3); margin-top: 6px; font-family: 'IBM Plex Mono', monospace; }
+        .poll-voters-list { margin-top: 6px; font-size: 12px; color: var(--text-2); line-height: 1.7; }
+        .poll-expired { color: var(--danger); font-size: 12px; }
         /* COMING SOON MODAL */
         .coming-soon-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,.8);
@@ -683,9 +738,40 @@
                     </button>
                 </div>
 
+                <!-- Poll compose -->
+                <div class="poll-compose" x-show="showPollCompose" x-transition>
+                    <div class="poll-compose-label">Ankieta · wygasa za 3 dni</div>
+                    <template x-for="(opt, i) in pollOptions" :key="i">
+                        <div class="poll-option-row">
+                            <input class="poll-option-input"
+                                   :placeholder="'Opcja ' + (i+1)"
+                                   :value="opt"
+                                   @input="pollOptions[i] = $event.target.value"
+                                   maxlength="80">
+                            <button class="poll-option-remove" x-show="pollOptions.length > 2"
+                                    @click="pollOptions.splice(i,1)" title="Usuń">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </template>
+                    <button class="poll-add-option" x-show="pollOptions.length < 4"
+                            @click="pollOptions.push('')">+ Dodaj opcję</button>
+                </div>
+
                 <div class="compose-divider"></div>
                 <div class="compose-footer">
                     <div class="compose-tools">
+                        <!-- Poll button -->
+                        <button class="compose-img-btn" @click="togglePollCompose()"
+                                :style="showPollCompose ? 'color:#ff9900;background:var(--accent-dim)' : ''"
+                                title="Dodaj ankietę">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+                                <line x1="6" y1="20" x2="6" y2="14"/>
+                            </svg>
+                        </button>
                         <!-- Image button -->
                         <button class="compose-img-btn" @click="$refs.imgInput.click()" title="Dodaj zdjęcie">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -714,7 +800,7 @@
                     </div>
 
                     <button class="post-submit-btn" @click="publish()"
-                            :disabled="(!draft.trim()&&!imageFile)||draft.length>280||postLoading">
+                            :disabled="(!draft.trim()&&!imageFile&&!showPollCompose)||draft.length>280||postLoading">
                         <span x-show="!postLoading">Opublikuj</span>
                         <span x-show="postLoading" style="display:flex;align-items:center;gap:6px;">
                             <span class="spinner" style="width:14px;height:14px;border-width:2px;"></span>
@@ -786,6 +872,47 @@
                         <!-- Post image -->
                         <div class="post-image" x-show="post.image_url" @click="lightboxSrc=post.image_url">
                             <img :src="post.image_url" :alt="'Zdjęcie od '+post.author" loading="lazy">
+                        </div>
+                        <!-- Poll display -->
+                        <div class="poll-wrap" x-show="post.poll">
+                            <template x-if="post.poll">
+                                <div>
+                                    <template x-for="(opt, i) in post.poll.options" :key="i">
+                                        <button class="poll-option-btn"
+                                                :disabled="pollHasVoted(post) || isPollExpired(post)"
+                                                @click="votePoll(post, i)">
+                                            <div class="poll-option-bar"
+                                                 :class="{winner: isPollWinner(post, i)}"
+                                                 :style="'width:' + pollPct(post, i) + '%'"></div>
+                                            <div class="poll-option-content">
+                                                <span class="poll-option-text">
+                                                    <span x-text="opt.text"></span>
+                                                    <span class="poll-option-mycheck"
+                                                          x-show="(opt.voters||[]).includes(currentUser)">✓</span>
+                                                </span>
+                                                <span class="poll-option-pct"
+                                                      x-show="pollHasVoted(post) || isPollExpired(post)"
+                                                      x-text="pollPct(post, i) + '%'"></span>
+                                            </div>
+                                        </button>
+                                    </template>
+                                    <div class="poll-meta">
+                                        <span x-text="pollTotalVotes(post) + ' głosów'"></span>
+                                        <span> · </span>
+                                        <span x-show="!isPollExpired(post)" x-text="pollTimeLeft(post)"></span>
+                                        <span x-show="isPollExpired(post)" class="poll-expired">Ankieta zakończona</span>
+                                    </div>
+                                    <!-- Who voted what -->
+                                    <div class="poll-voters-list" x-show="pollHasVoted(post) || isPollExpired(post)">
+                                        <template x-for="(opt, i) in post.poll.options" :key="'v'+i">
+                                            <div x-show="(opt.voters||[]).length > 0">
+                                                <strong x-text="opt.text"></strong>:
+                                                <span x-text="(opt.voters||[]).join(', ')"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
                         </div>
                     </div>
                     <div x-show="editingId===post.id" x-transition style="margin-top:6px">
@@ -941,7 +1068,7 @@
     <div class="coming-soon-modal">
         <img src="pacior_elite.png" class="coming-soon-logo" onerror="this.style.display='none'">
         <div class="coming-soon-title">Pacior Elite</div>
-        <p class="coming-soon-sub">Tytuł Pacior Elite coming soon<br>Bedzie nabywana w formie quizu i minigier</p>
+        <p class="coming-soon-sub">Coś wielkiego nadchodzi.<br>Bądź pierwszy, który się dowie.</p>
         <button class="coming-soon-close" @click="showEliteModal=false">Rozumiem</button>
     </div>
 </div>
@@ -1035,6 +1162,10 @@ function App() {
         // Images
         imageFile: null,
         imagePreview: null,
+
+        // Poll compose
+        showPollCompose: false,
+        pollOptions: ['', ''],
 
         // Lightbox
         lightboxSrc: null,
@@ -1243,7 +1374,15 @@ function App() {
 
         // ── Publish ───────────────────────────────────
         async publish() {
-            if ((!this.draft.trim() && !this.imageFile) || this.postLoading) return;
+            if ((!this.draft.trim() && !this.imageFile && !this.showPollCompose) || this.postLoading) return;
+            // Validate poll
+            let pollData = null;
+            if (this.showPollCompose) {
+                const validOpts = this.pollOptions.map(o => o.trim()).filter(Boolean);
+                if (validOpts.length < 2) { this.toast('Ankieta wymaga minimum 2 opcji.', 'error'); return; }
+                const expiresAt = new Date(Date.now() + 3 * 24 * 3600 * 1000).toISOString();
+                pollData = { options: validOpts.map(t => ({ text: t, voters: [] })), expires_at: expiresAt };
+            }
             this.postLoading = true;
             this.uploadProgress = 0;
             try {
@@ -1257,6 +1396,7 @@ function App() {
                     author:    this.currentUser,
                     content:   this.draft.trim(),
                     image_url: imageUrl,
+                    poll:      pollData,
                     liked_by:  [],
                     views:     0,
                     comments:  0,
@@ -1265,6 +1405,8 @@ function App() {
                 this.posts.unshift(newPost);
                 this.draft = '';
                 this.removeImage();
+                this.showPollCompose = false;
+                this.pollOptions = ['', ''];
                 this.$nextTick(() => { if (this.$refs.compose) this.$refs.compose.style.height = 'auto'; });
                 this.toast('Post opublikowany!', 'success');
             } catch (e) {
@@ -1440,6 +1582,68 @@ function App() {
                 (m, user) => `<span class="mention">${m}</span>`
             );
             return out;
+        },
+
+        // ── Poll ──────────────────────────────────────────
+        togglePollCompose() {
+            this.showPollCompose = !this.showPollCompose;
+            if (!this.showPollCompose) this.pollOptions = ['', ''];
+        },
+
+        pollTotalVotes(post) {
+            if (!post.poll) return 0;
+            return post.poll.options.reduce((s, o) => s + (o.voters||[]).length, 0);
+        },
+
+        pollPct(post, i) {
+            const total = this.pollTotalVotes(post);
+            if (!total) return 0;
+            return Math.round(((post.poll.options[i].voters||[]).length / total) * 100);
+        },
+
+        isPollWinner(post, i) {
+            const counts = post.poll.options.map(o => (o.voters||[]).length);
+            const max = Math.max(...counts);
+            return max > 0 && counts[i] === max;
+        },
+
+        pollHasVoted(post) {
+            if (!post.poll) return false;
+            return post.poll.options.some(o => (o.voters||[]).includes(this.currentUser));
+        },
+
+        isPollExpired(post) {
+            if (!post.poll?.expires_at) return false;
+            return new Date() > new Date(post.poll.expires_at);
+        },
+
+        pollTimeLeft(post) {
+            if (!post.poll?.expires_at) return '';
+            const ms = new Date(post.poll.expires_at) - new Date();
+            if (ms <= 0) return 'Zakończona';
+            const h = Math.floor(ms / 3600000);
+            const d = Math.floor(h / 24);
+            if (d > 0) return 'Zostało ' + d + 'd ' + (h % 24) + 'godz';
+            return 'Zostało ' + h + 'godz';
+        },
+
+        async votePoll(post, optionIndex) {
+            if (this.pollHasVoted(post) || this.isPollExpired(post)) return;
+            const idx = this.posts.findIndex(p => p.id === post.id);
+            if (idx === -1) return;
+
+            // Optimistic update
+            const updated = JSON.parse(JSON.stringify(post.poll));
+            updated.options[optionIndex].voters = [...(updated.options[optionIndex].voters||[]), this.currentUser];
+            this.posts.splice(idx, 1, { ...this.posts[idx], poll: updated });
+
+            try {
+                await sbRest('PATCH', 'posts?id=eq.' + post.id, { poll: updated });
+            } catch {
+                // revert
+                this.posts.splice(idx, 1, post);
+                this.toast('Błąd głosowania.', 'error');
+            }
         },
 
         // ── Avatar ───────────────────────────────────────
