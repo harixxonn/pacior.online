@@ -432,7 +432,7 @@
             background: radial-gradient(ellipse at 30% 60%, rgba(255,153,0,.08) 0%, transparent 60%);
         }
         .profile-avatar-wrap {
-            position: absolute; bottom: -50px; left: 20px; z-index: 2;
+            position: absolute; bottom: -50px; left: 20px; z-index: 10;
         }
         .profile-avatar-wrap .avatar {
             width: 108px; height: 108px; font-size: 42px;
@@ -561,7 +561,7 @@
         .mention { color: var(--accent); font-weight: 600; cursor: default; }
 
         /* AVATAR IMAGE */
-        .avatar img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; background: #111; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 
         /* AVATAR MODAL */
         .avatar-modal-overlay {
