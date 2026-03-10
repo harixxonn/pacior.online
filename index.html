@@ -934,14 +934,7 @@
                             </svg>
                             <span x-text="commentCounts[post.id] ?? post.comments ?? 0"></span>
                         </button>
-                        <!-- Views -->
-                        <button class="action-btn" style="cursor:default" title="Wyświetlenia">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                            </svg>
-                            <span x-text="post.views||0"></span>
-                        </button>
+
                         <!-- Share -->
                         <button class="action-btn" @click="share(post)" title="Udostępnij">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
