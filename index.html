@@ -432,11 +432,12 @@
             background: radial-gradient(ellipse at 30% 60%, rgba(255,153,0,.08) 0%, transparent 60%);
         }
         .profile-avatar-wrap {
-            position: absolute; bottom: -50px; left: 20px; z-index: 10;
+            position: absolute; bottom: -54px; left: 20px; z-index: 20;
         }
         .profile-avatar-wrap .avatar {
             width: 108px; height: 108px; font-size: 42px;
             border: 4px solid #000; box-shadow: 0 0 0 1px var(--border);
+            position: relative; z-index: 20;
         }
         .profile-edit-btn-wrap {
             position: absolute; bottom: -48px; right: 16px; z-index: 2;
@@ -449,7 +450,7 @@
         }
         .profile-edit-profile-btn:hover { border-color: var(--text-2); background: rgba(255,255,255,.05); }
 
-        .profile-info-section { padding: 62px 20px 18px; border-bottom: 1px solid var(--border); }
+        .profile-info-section { padding: 62px 20px 18px; border-bottom: 1px solid var(--border); position: relative; z-index: 1; }
         .profile-name-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
         .profile-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 24px; }
         .profile-handle { color: var(--text-2); font-size: 15px; font-family: 'IBM Plex Mono', monospace; margin-bottom: 14px; }
