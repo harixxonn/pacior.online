@@ -405,6 +405,56 @@
         .badge-elite-img { width: 18px; height: 18px; object-fit: contain; margin-left: 3px; vertical-align: middle; display: inline-block; }
 
 
+
+        /* PROFILE PAGE */
+        .profile-wrap { flex: 1; min-width: 0; max-width: 608px; border-right: 1px solid var(--border); }
+        .profile-header {
+            position: sticky; top: 0; z-index: 20; background: rgba(0,0,0,.82);
+            backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 15px 20px;
+            display: flex; align-items: center; gap: 14px;
+        }
+        .profile-header-back {
+            background: transparent; border: none; color: var(--text-2); cursor: pointer;
+            padding: 5px 8px; border-radius: 50%; transition: all .15s; display: flex; align-items: center;
+        }
+        .profile-header-back:hover { color: var(--accent); background: var(--accent-dim); }
+        .profile-header-info h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; line-height: 1.2; }
+        .profile-header-info span { font-size: 13px; color: var(--text-2); }
+
+        .profile-banner {
+            height: 120px; background: linear-gradient(135deg, #0f0f0f 0%, #1a1000 50%, #0f0f0f 100%);
+            border-bottom: 1px solid var(--border); position: relative;
+        }
+        .profile-avatar-wrap {
+            position: absolute; bottom: -36px; left: 20px;
+        }
+        .profile-avatar-wrap .avatar { width: 72px; height: 72px; font-size: 28px; border: 3px solid #000; }
+        .profile-info-section { padding: 48px 20px 18px; border-bottom: 1px solid var(--border); }
+        .profile-name-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+        .profile-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 22px; }
+        .profile-handle { color: var(--text-2); font-size: 14px; font-family: 'IBM Plex Mono', monospace; margin-bottom: 12px; }
+        .profile-bio {
+            font-size: 15px; line-height: 1.6; color: var(--text-1); margin-bottom: 14px;
+            white-space: pre-wrap; word-break: break-word;
+        }
+        .profile-bio-placeholder { color: var(--text-3); font-size: 14px; font-style: italic; margin-bottom: 14px; }
+        .profile-stats { display: flex; gap: 22px; }
+        .profile-stat-val { font-weight: 700; font-size: 16px; }
+        .profile-stat-label { font-size: 13px; color: var(--text-2); margin-left: 4px; }
+
+        .profile-edit-bio {
+            width: 100%; background: #0a0a0a; border: 1px solid var(--accent); border-radius: 10px;
+            padding: 10px 14px; color: var(--text-1); font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 15px; resize: none; min-height: 70px; outline: none;
+            box-shadow: 0 0 0 3px rgba(255,153,0,.09); margin-bottom: 10px;
+        }
+        .profile-edit-actions { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 14px; }
+
+        .profile-posts-title {
+            padding: 14px 20px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px;
+            border-bottom: 1px solid var(--border); color: var(--text-2);
+        }
+
         /* POLL */
         .poll-compose {
             margin-top: 10px; background: #080808; border: 1px solid var(--border);
@@ -624,7 +674,7 @@
             <span class="logo-fallback">P</span>
         </div>
         <nav>
-            <a href="#" class="nav-link active">
+            <a href="#" class="nav-link" :class="{active:view==='feed'}" @click.prevent="closeProfile()">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
                 <span class="nav-link-label">Strona główna</span>
             </a>
@@ -632,7 +682,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <span class="nav-link-label">Szukaj</span>
             </a>
-            <a href="#" class="nav-link">
+            <a href="#" class="nav-link" :class="{active:view==='profile'&&profileUser===currentUser}" @click.prevent="openProfile(currentUser)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 <span class="nav-link-label">Profil</span>
             </a>
@@ -679,7 +729,7 @@
     </aside>
 
     <!-- FEED -->
-    <main class="feed-wrap">
+    <main class="feed-wrap" x-show="view==='feed'" x-transition style="display:none">
         <div class="feed-header">
             <div style="display:flex;align-items:center;min-width:0;flex:1">
                 <button class="feed-back-btn" x-show="feedMode!=='home'" @click="clearFilter()" title="Wróć">
@@ -835,7 +885,7 @@
                 <div class="post-body">
                     <!-- Meta -->
                     <div class="post-meta-row">
-                        <span class="post-author" x-text="post.author"></span>
+                        <span class="post-author" x-text="post.author" @click="openProfile(post.author)" style="cursor:pointer" title="Zobacz profil"></span>
                         <img x-show="getVerified(post.author)==='elite'" src="pacior_elite.png" class="badge-elite-img" title="Pacior Elite">
                         <span x-show="getVerified(post.author)==='bot'" class="badge badge-bot" title="Bot">BOT</span>
                         <span class="post-handle" x-text="'@'+post.author"></span>
@@ -1011,6 +1061,126 @@
         </div>
     </main>
 
+    <!-- PROFILE VIEW -->
+    <div class="profile-wrap" x-show="view==='profile'" x-transition style="display:none">
+        <!-- Sticky header -->
+        <div class="profile-header">
+            <button class="profile-header-back" @click="closeProfile()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div class="profile-header-info">
+                <h2 x-text="profileUser"></h2>
+                <span x-text="(profilePosts.length) + ' postów'"></span>
+            </div>
+        </div>
+
+        <!-- Banner + avatar -->
+        <div class="profile-banner">
+            <div class="profile-avatar-wrap">
+                <div class="avatar" style="width:72px;height:72px;font-size:28px;border:3px solid #000;">
+                    <img x-show="avatarMap[profileUser]" :src="avatarMap[profileUser]" alt="avatar">
+                    <span x-show="!avatarMap[profileUser]" x-text="(profileUser[0]||'?').toUpperCase()"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info section -->
+        <div class="profile-info-section">
+            <div class="profile-name-row">
+                <span class="profile-name" x-text="profileUser"></span>
+                <img x-show="getVerified(profileUser)==='elite'" src="pacior_elite.png" class="badge-elite-img" title="Pacior Elite">
+                <span x-show="getVerified(profileUser)==='bot'" class="badge badge-bot">BOT</span>
+            </div>
+            <div class="profile-handle" x-text="'@'+profileUser"></div>
+
+            <!-- Bio display / edit -->
+            <template x-if="profileUser===currentUser && editingBio">
+                <div>
+                    <textarea class="profile-edit-bio" x-model="bioDraft" maxlength="160" placeholder="Napisz coś o sobie..." rows="3"></textarea>
+                    <div class="profile-edit-actions">
+                        <button class="btn-ghost" @click="editingBio=false">Anuluj</button>
+                        <button class="btn-save" @click="saveBio()">Zapisz</button>
+                    </div>
+                </div>
+            </template>
+            <template x-if="!(profileUser===currentUser && editingBio)">
+                <div>
+                    <div x-show="profileBio" class="profile-bio" x-text="profileBio"></div>
+                    <div x-show="!profileBio && profileUser===currentUser" class="profile-bio-placeholder"
+                         @click="editingBio=true; bioDraft=profileBio" style="cursor:pointer">
+                        Kliknij aby dodać bio...
+                    </div>
+                    <div x-show="!profileBio && profileUser!==currentUser" class="profile-bio-placeholder">
+                        Brak bio.
+                    </div>
+                    <button x-show="profileUser===currentUser" class="btn-ghost" style="font-size:13px;padding:5px 14px;margin-bottom:14px;"
+                            @click="editingBio=true; bioDraft=profileBio">
+                        Edytuj bio
+                    </button>
+                </div>
+            </template>
+
+            <!-- Stats -->
+            <div class="profile-stats">
+                <div>
+                    <span class="profile-stat-val" x-text="profilePosts.length"></span>
+                    <span class="profile-stat-label">postów</span>
+                </div>
+                <div>
+                    <span class="profile-stat-val" x-text="profileTotalLikes"></span>
+                    <span class="profile-stat-label">polubień</span>
+                </div>
+                <div>
+                    <span class="profile-stat-val" x-text="profileTotalComments"></span>
+                    <span class="profile-stat-label">komentarzy</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- User posts -->
+        <div class="profile-posts-title">Posty</div>
+
+        <div x-show="profilePosts.length===0" class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <h3>Brak postów</h3>
+        </div>
+
+        <template x-for="post in profilePosts" :key="post.id">
+            <div class="post-card" :id="'p-'+post.id">
+                <div class="avatar avatar-md">
+                    <img x-show="avatarMap[post.author]" :src="avatarMap[post.author]" alt="avatar">
+                    <span x-show="!avatarMap[post.author]" x-text="post.author[0].toUpperCase()"></span>
+                </div>
+                <div class="post-body">
+                    <div class="post-meta-row">
+                        <span class="post-author" x-text="post.author" @click="openProfile(post.author)" style="cursor:pointer" title="Zobacz profil"></span>
+                        <img x-show="getVerified(post.author)==='elite'" src="pacior_elite.png" class="badge-elite-img" title="Pacior Elite">
+                        <span x-show="getVerified(post.author)==='bot'" class="badge badge-bot">BOT</span>
+                        <span class="post-handle" x-text="'@'+post.author"></span>
+                        <span class="post-dot">·</span>
+                        <span class="post-time" x-text="ago(post.created_at)"></span>
+                    </div>
+                    <p class="post-text" x-show="post.content" x-html="renderContent(post.content)"></p>
+                    <div class="post-image" x-show="post.image_url" @click="lightboxSrc=post.image_url">
+                        <img :src="post.image_url" loading="lazy">
+                    </div>
+                    <div class="actions">
+                        <button class="action-btn" :class="{liked: isLiked(post)}"
+                                :id="'like-p-'+post.id" @click="like(post)">
+                            <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"
+                                 :fill="isLiked(post)?'currentColor':'none'">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                            </svg>
+                            <span x-text="(post.liked_by||[]).length"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <div x-show="profilePosts.length>0" style="padding:28px;text-align:center;color:var(--text-3);font-size:12px;letter-spacing:.07em;">── koniec ──</div>
+    </div>
+
     <!-- RIGHT SIDEBAR -->
     <aside class="right-sidebar">
         <div class="widget">
@@ -1061,7 +1231,7 @@
     <div class="coming-soon-modal">
         <img src="pacior_elite.png" class="coming-soon-logo" onerror="this.style.display='none'">
         <div class="coming-soon-title">Pacior Elite</div>
-        <p class="coming-soon-sub">Coś wielkiego nadchodzi.<br>Bądź pierwszy, który się dowie.</p>
+        <p class="coming-soon-sub">Najwyższy stopień hierarchii ludzkiej — coming soon.<br>Żeby nabyć trzeba będzie zdać test (z kaligrafii).</p>
         <button class="coming-soon-close" @click="showEliteModal=false">Rozumiem</button>
     </div>
 </div>
@@ -1136,6 +1306,16 @@ function App() {
         showUserMenu: false,
         showEliteModal: false,
 
+        // View: 'feed' | 'profile'
+        view: 'feed',
+
+        // Profile
+        profileUser: '',
+        profileBio: '',
+        profileLoading: false,
+        editingBio: false,
+        bioDraft: '',
+
         // Posts
         posts: [],
         pendingPosts: [],
@@ -1188,6 +1368,19 @@ function App() {
         _seq: 0,
 
         get initial() { return (this.currentUser[0] || '?').toUpperCase(); },
+
+        get profilePosts() {
+            if (!this.profileUser) return [];
+            return this.posts.filter(p => p.author === this.profileUser);
+        },
+
+        get profileTotalLikes() {
+            return this.profilePosts.reduce((s, p) => s + (p.liked_by||[]).length, 0);
+        },
+
+        get profileTotalComments() {
+            return this.profilePosts.reduce((s, p) => s + (p.comments||0), 0);
+        },
 
         get feedTitle() {
             if (this.feedMode === 'hashtag') return this.activeHashtag || '';
@@ -1575,6 +1768,46 @@ function App() {
                 (m, user) => `<span class="mention">${m}</span>`
             );
             return out;
+        },
+
+        // ── Profile ──────────────────────────────────────
+        async openProfile(username) {
+            this.profileUser = username;
+            this.view = 'profile';
+            this.editingBio = false;
+            this.profileBio = '';
+            try {
+                const data = await sbRest('GET', `profiles?username=eq.${username}`);
+                if (data && data.length > 0) {
+                    this.profileBio = data[0].bio || '';
+                } else {
+                    // create empty profile row
+                    await sbRest('POST', 'profiles', { username, bio: '' }).catch(() => {});
+                }
+            } catch { /* silent */ }
+        },
+
+        closeProfile() {
+            this.view = 'feed';
+            this.profileUser = '';
+            this.editingBio = false;
+        },
+
+        async saveBio() {
+            const bio = this.bioDraft.trim();
+            try {
+                const existing = await sbRest('GET', `profiles?username=eq.${this.currentUser}`);
+                if (existing && existing.length > 0) {
+                    await sbRest('PATCH', `profiles?username=eq.${this.currentUser}`, { bio });
+                } else {
+                    await sbRest('POST', 'profiles', { username: this.currentUser, bio });
+                }
+                this.profileBio = bio;
+                this.editingBio = false;
+                this.toast('Bio zaktualizowane!', 'success');
+            } catch {
+                this.toast('Błąd zapisu bio.', 'error');
+            }
         },
 
         // ── Poll ──────────────────────────────────────────
